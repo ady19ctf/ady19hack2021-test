@@ -20,6 +20,14 @@
             </div>
 
             <div class="mt-4">
+                <x-jet-label for="birth" value="{{ __('Birth Date') }}" />
+                <select name="birth" class="block mt-1 w-full focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                    <option value="2021">2021</option>
+                    <option value="2022" @if (old('birth') == 2) selected @endif >2022</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
                 <x-jet-label for="password" value="{{ __('Password') }}" />
                 <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             </div>

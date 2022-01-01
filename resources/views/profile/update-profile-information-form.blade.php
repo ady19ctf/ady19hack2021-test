@@ -61,7 +61,7 @@
 
         <!-- Birthday -->
         <div class="col-span-6 sm:col-span-4">
-            <x-jet-label for="birth" value="{{ __('Birthday') }}" />
+            <x-jet-label for="birth" value="{{ __('Birth Date') }}" />
             <x-jet-input id="birth" type="text" class="mt-1 block w-full" wire:model.defer="state.birth" autocomplete="birth" />
             <x-jet-input-error for="birth" class="mt-2" />
         </div>
