@@ -20,11 +20,8 @@
             </div>
 
             <div class="mt-4">
-                <x-jet-label for="birth" value="{{ __('Birth Date') }}" />
-                <select name="birth" class="block mt-1 w-full focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                    <option value="2021">2021</option>
-                    <option value="2022" @if (old('birth') == 2) selected @endif >2022</option>
-                </select>
+                <x-jet-label for="birth" value="{{ __('Date of Birth') }}" />
+                <x-jet-input id="birth" class="block mt-1 w-full" type="date" name="birth" :value="old('birth')" required />
             </div>
 
             <div class="mt-4">
