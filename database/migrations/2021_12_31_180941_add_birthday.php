@@ -15,7 +15,7 @@ class AddBirthday extends Migration
     {
         //
 	Schema::table('users', function (Blueprint $table) {
-	    $table->string('birth')->nullable();
+	    $table->string('uuid')->nullable();
 	});
     }
 
