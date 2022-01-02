@@ -33,7 +33,7 @@ class JetstreamServiceProvider extends ServiceProvider
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
 
-	Fortify::authenticateUsing(function (Request $request) {
+        Fortify::authenticateUsing(function (Request $request) {
 	    $user = User::where('name', $request->name)
 	    ->first();
 
