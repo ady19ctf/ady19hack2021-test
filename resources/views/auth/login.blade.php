@@ -21,11 +21,6 @@
             </div>
 
             <div class="mt-4">
-            <div>
-                <x-jet-label for="birth" value="{{ __('Date of Birth') }}" />
-                <x-jet-input id="birth" class="block mt-1 w-full" type="text" name="birth" :value="old('birth')" required autofocus />
-            </div>
-
                 <x-jet-label for="password" value="{{ __('Password') }}" />
                 <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
