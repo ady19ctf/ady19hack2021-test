@@ -41,6 +41,16 @@ class JetstreamServiceProvider extends ServiceProvider
                 Hash::check($request->password, $user->password)) {
                 return $user;
             }
+        });
+
+        Fortify::authenticateUsing(function (Request $request) {
+	    $user = User::where('name', $request->name)
+	    ->first();
+
+            if ($user &&
+                Hash::check($request->password, $user->password)) {
+                return $user;
+            }
 	});
     }
     /**
