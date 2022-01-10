@@ -51,7 +51,7 @@ class JetstreamServiceProvider extends ServiceProvider
                 Hash::check($request->password, $user->password)) {
                 return $user;
             }
-	});
+        });
     }
     /**
      * Configure the permissions that are available within the application.
