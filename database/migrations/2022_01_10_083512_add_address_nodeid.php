@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddBirthday extends Migration
+class AddAddressNodeid extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,10 @@ class AddBirthday extends Migration
     public function up()
     {
         //
-	Schema::table('users', function (Blueprint $table) {
-	    $table->string('birth')->nullable();
-	});
+        Schema::table('users', function (Blueprint $table) {    
+            $table->string('address')->nullable();
+            $table->string('nodeid')->nullable();
+        });
     }
 
     /**
