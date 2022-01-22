@@ -21,8 +21,20 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
+Route::get('/home', function () {
+    return view('home');
+});
+
+Route::get('/view', 'VoteController@view');
+
+Route::get('/statement', function () {
+    return view('statement');
+});
+
 Route::get('/vote', function () {
     return view('vote');
 });
+
+Route::post('/vote-check', 'VoteController@check');
 
 Route::post('/vote-result','VoteController@vote');
