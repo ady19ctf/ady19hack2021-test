@@ -9,6 +9,12 @@ if __name__ == "__main__":
     # args[4]:BC JSON-RPC Client password
     # args[5]:voter address
 
+
     client = mcrpc.RpcClient(args[1] ,args[2] ,args[3] ,args[4])
-    asset=client.getaddressbalances(args[5])[0]['qty']
-    print(asset)
+    try: 
+        asset=client.getaddressbalances(args[5])[0]['qty']
+        print(asset)
+    except IndexError as e:
+        print(0)
+
+    
