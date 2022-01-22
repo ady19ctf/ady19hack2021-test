@@ -1,27 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
+require '../vendor/autoload.php';
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Aws\SecretsManager\SecretsManagerClient; 
+use Aws\Exception\AwsException;
+
+
 class VoteController extends Controller
 {
-    
     public function view(){
+        $hosts = array('test-chain00', 'test-chain01');
+
         $user_address = Auth::user()['address'];
         $path=resource_path();
+
         
-        // 以下のサーバ情報等は別に保管する予定。一時的にベタ書き。Cred情報は別の場所に保管。
-        $admin_host='20.0.0.160';
-        $port='7416';
-        $ruser='multichainrpc';
-        $rpass='';
+        
+        $admin_host=$this->getAPIFactor('test-chain00-ip');
+        $port=$this->getAPIFactor('test-chain00-port');
+        $ruser=$this->getAPIFactor('test-chain00-user');
+        $rpass=$this->getAPIFactor('test-chain00-pass');
+        logger('aws api debug', [$ruser,$rpass]);
 
         $python_code="python3 $path/python/show_asset.py $admin_host $port $ruser $rpass $user_address";
         exec($python_code, $output, $status);
-        // logger('test',[$output[0],$status]);
-
 
         return view('/statement',['result'=>$output[0]]);
     }
@@ -36,11 +42,10 @@ class VoteController extends Controller
         $user_name = Auth::user()['name'];
         $path=resource_path();
 
-        // 以下のサーバ情報等は別に保管する予定。一時的にベタ書き。Cred情報は別の場所に保管。
-        $admin_host='20.0.0.160';
-        $port='7416';
-        $ruser='multichainrpc';
-        $rpass='';
+        $admin_host=$this->getAPIFactor('test-chain00-ip');
+        $port=$this->getAPIFactor('test-chain00-port');
+        $ruser=$this->getAPIFactor('test-chain00-user');
+        $rpass=$this->getAPIFactor('test-chain00-pass');
 
         $candi_address='1URXJTtrc9gzWV9bWcmJnrAV6A8hQP88o4f4Xb';
         $asset_name='asset2';
@@ -51,7 +56,58 @@ class VoteController extends Controller
         return view('/vote-result',['result'=>$output[0]]);
     }
 
-    public function sendAsset(){
-        // APIを設定
+    
+    public function getAPIFactor($key){
+        $client = new SecretsManagerClient([
+            'version' => '2017-10-17',
+            'region' => 'ap-northeast-1',
+        ]);
+        $secretName = env('SECRET_NAME');
+        $result = $client->getSecretValue([
+            'SecretId' => $secretName,
+        ]);
+        try {
+            $result = $client->getSecretValue([
+                'SecretId' => $secretName,
+            ]);
+        } catch (AwsException $e) {
+            $error = $e->getAwsErrorCode();
+            if ($error == 'DecryptionFailureException') {
+                // Secrets Manager can't decrypt the protected secret text using the provided AWS KMS key.
+                // Handle the exception here, and/or rethrow as needed.
+                throw $e;
+            }
+            if ($error == 'InternalServiceErrorException') {
+                // An error occurred on the server side.
+                // Handle the exception here, and/or rethrow as needed.
+                throw $e;
+            }
+            if ($error == 'InvalidParameterException') {
+                // You provided an invalid value for a parameter.
+                // Handle the exception here, and/or rethrow as needed.
+                throw $e;
+            }
+            if ($error == 'InvalidRequestException') {
+                // You provided a parameter value that is not valid for the current state of the resource.
+                // Handle the exception here, and/or rethrow as needed.
+                throw $e;
+            }
+            if ($error == 'ResourceNotFoundException') {
+                // We can't find the resource that you asked for.
+                // Handle the exception here, and/or rethrow as needed.
+                throw $e;
+            }
+        }
+
+        // Decrypts secret using the associated KMS CMK.
+        // Depending on whether the secret is a string or binary, one of these fields will be populated.
+        if (isset($result['SecretString'])) {
+            $secret = $result['SecretString'];
+        } else {
+            $secret = base64_decode($result['SecretBinary']);
+        }
+        $secret = json_decode($secret,true)[$key];
+        
+        return $secret;
     }
 }
