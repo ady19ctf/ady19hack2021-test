@@ -21,7 +21,7 @@ class JetstreamServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        if (App::environment('production')) {
+        if (App::environment('local')) {
           $this->app['request']->server->set('HTTPS', true);
         }
     }

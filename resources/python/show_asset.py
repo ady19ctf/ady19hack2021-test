@@ -16,5 +16,3 @@ if __name__ == "__main__":
         print(asset)
     except IndexError as e:
         print(0)
-
-    
