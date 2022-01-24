@@ -15,6 +15,13 @@
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
+
+                    @can('manage-users')
+                    <x-jet-nav-link href="{{ route('admin.RequestPasswordReset.index') }}" :active="request()->routeIs('admin.RequestPasswordReset.index')">
+                        {{ __('Password Reset Requests') }}
+                    </x-jet-nav-link>
+                    @endif
+                    
                 </div>
             </div>
 

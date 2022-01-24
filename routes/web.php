@@ -21,6 +21,12 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
+Route::group(['middleware'=>'auth'], function() {
+    Route::group(['middleware'=>'role:admin', 'prefix'=>'admin', 'as'=>'admin.'], function(){
+        Route::resource('RequestPasswordReset', RequestPasswordReset\ListController::class);
+    });
+});
+
 Route::get('/home', function () {
     return view('home');
 });
