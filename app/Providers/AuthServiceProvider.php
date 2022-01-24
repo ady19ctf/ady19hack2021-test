@@ -30,5 +30,8 @@ class AuthServiceProvider extends ServiceProvider
             return $user->typeid == 0;
         });
         //
+        Gate::define('manage-vote', function (User $user) {
+            return $user->typeid == 2;
+        });
     }
 }

@@ -20,6 +20,12 @@ class CheckRole
         if ($role == 'admin' && auth()->user()->typeid !=0){
             abort(403);
         }
+//        if ($role == 'candidate' && auth()->user()->typeid !=1){
+//            abort(403);
+//        }
+        if ($role == 'user' && auth()->user()->typeid !=2){
+            abort(403);
+        }
         return $next($request);
     }
 }

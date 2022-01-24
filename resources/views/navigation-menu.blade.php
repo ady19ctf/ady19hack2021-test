@@ -17,11 +17,17 @@
                     </x-jet-nav-link>
 
                     @can('manage-users')
-                    <x-jet-nav-link href="{{ route('admin.RequestPasswordReset.index') }}" :active="request()->routeIs('admin.RequestPasswordReset.index')">
+                    <x-jet-nav-link href="{{ route('admin.PasswordResetRequests.index') }}" :active="request()->routeIs('admin.PasswordResetRequests.index')">
                         {{ __('Password Reset Requests') }}
                     </x-jet-nav-link>
                     @endif
                     
+                    @can('manage-vote')
+                    <x-jet-nav-link href="{{ route('user.vote.index') }}" :active="request()->routeIs('user.vote.index')">
+                        {{ __('Vote') }}
+                    </x-jet-nav-link>
+		    @endif
+
                 </div>
             </div>
 

@@ -23,7 +23,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::group(['middleware'=>'auth'], function() {
     Route::group(['middleware'=>'role:admin', 'prefix'=>'admin', 'as'=>'admin.'], function(){
-        Route::resource('RequestPasswordReset', RequestPasswordReset\ListController::class);
+        Route::resource('PasswordResetRequests', Admin\PasswordResetRequestsController::class);
+    });
+    Route::group(['middleware'=>'role:user', 'prefix'=>'user', 'as'=>'user.'], function(){
+        Route::resource('vote', User\VoteController::class);
     });
 });
 

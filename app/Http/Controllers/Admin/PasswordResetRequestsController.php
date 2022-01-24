@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\RequestPasswordReset;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ListController extends Controller
+class PasswordResetRequestsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class ListController extends Controller
     public function index()
     {
         //
-        return view('admin.RequestPasswordReset.index');
+        return view('admin.PasswordResetRequests.index');
     }
 
     /**
