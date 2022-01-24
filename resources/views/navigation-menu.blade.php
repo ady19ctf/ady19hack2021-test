@@ -22,11 +22,17 @@
                     </x-jet-nav-link>
                     @endif
                     
+                    @can('manage-votestatus')
+                    <x-jet-nav-link href="{{ route('admin.VoteStatus.index') }}" :active="request()->routeIs('admin.VoteStatus.index')">
+                        {{ __('Vote Status') }}
+                    </x-jet-nav-link>
+		    @endif
+
                     @can('manage-vote')
                     <x-jet-nav-link href="{{ route('user.vote.index') }}" :active="request()->routeIs('user.vote.index')">
                         {{ __('Vote') }}
                     </x-jet-nav-link>
-		    @endif
+                    @endif
 
                 </div>
             </div>

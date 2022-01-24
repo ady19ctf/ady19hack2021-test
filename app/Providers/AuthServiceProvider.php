@@ -29,7 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-users', function (User $user) {
             return $user->typeid == 0;
         });
-        //
+        Gate::define('manage-votestatus', function (User $user) {
+            return $user->typeid == 0;
+        });
         Gate::define('manage-vote', function (User $user) {
             return $user->typeid == 2;
         });
