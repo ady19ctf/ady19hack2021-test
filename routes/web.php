@@ -31,6 +31,11 @@ Route::group(['middleware'=>'auth'], function() {
     Route::group(['middleware'=>'role:user', 'prefix'=>'user', 'as'=>'user.'], function(){
         Route::resource('vote', User\VoteController::class);
     });
+    // Route::post('vote-check', [User\VoteController::class, 'check']);
+
+    // Route::post('/vote', [VoteResultController::class, 'vote']);
+    // Route::get('VoteResult', [User\VoteResultController::class, 'create']);
+    // });
 });
 
 // Route::get('/home', function () {
