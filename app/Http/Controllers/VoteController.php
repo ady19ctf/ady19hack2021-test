@@ -5,23 +5,38 @@ require '../vendor/autoload.php';
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 use Aws\SecretsManager\SecretsManagerClient; 
 use Aws\Exception\AwsException;
 
-
-
 class VoteController extends Controller
 {
+
+    public $hosts;
+
+    function __construct(){
+        $this->hosts=array('test-chain00', 'test-chain01');
+    }
+
     public function view(){
         logger('in view func');
-        $hosts = array('test-chain00', 'test-chain01');
         $user_address = Auth::user()['address'];
-        $path=resource_path();
 
-        $own_wallet=$this->getOwnWalletHost($hosts, $user_address);
+        $own_wallet=$this->getOwnWalletHost($this->hosts, $user_address);
         logger('own wallet host',[$own_wallet]);
 
+        $asset_value=$this->getAssetValue($own_wallet, $user_address);
+        return view('/statement',['result'=>$asset_value]);
+    }
+
+    public function check(){
+        return view('/vote-check',['candidate'=>$_POST['candidate']]);
+    }
+
+    public function getAssetValue($own_wallet, $user_address){
+        logger('in getAssetValue func');
+        $path=resource_path();
         $admin_host=$this->getAPIFactor("{$own_wallet}-ip");
         $port=$this->getAPIFactor("{$own_wallet}-port");
         $ruser=$this->getAPIFactor("{$own_wallet}-user");
@@ -31,11 +46,7 @@ class VoteController extends Controller
         $python_code="python3 $path/python/show_asset.py $admin_host $port $ruser $rpass $user_address";
         exec($python_code, $output, $status);
 
-        return view('/statement',['result'=>$output[0]]);
-    }
-
-    public function check(){
-        return view('/vote-check',['candidate'=>$_POST['candidate']]);
+        return $output[0];
     }
 
     public function vote(){
@@ -43,8 +54,8 @@ class VoteController extends Controller
         $hosts = array('test-chain00', 'test-chain01');
         $user_address = Auth::user()['address'];
         $path=resource_path();
-        logger('own wallet host',[$hosts]);
-        $own_wallet=$this->getOwnWalletHost($hosts, $user_address);
+        logger('own wallet host',[$this->hosts]);
+        $own_wallet=$this->getOwnWalletHost($this->hosts, $user_address);
         logger('own wallet host',[$own_wallet]);
 
         $admin_host=$this->getAPIFactor("{$own_wallet}-ip");
@@ -60,6 +71,64 @@ class VoteController extends Controller
         exec($python_code, $output, $status);
         
         return view('/vote-result',['result'=>$output[0]]);
+    }
+
+    public function showresult(){
+        logger('in showresult func');
+        // 立候補者のアドレス一覧を取得
+        // データベースにアクセスし、ユーザの種別が候補者のユーザのアドレスを取得する。ユーザ名も併せて。
+        $database=env('DB_DATABASE', 'forge');
+        $host=env('DB_HOST');
+        $charset="utf8mb4";
+        $database_user=env('DB_USERNAME', 'forge');
+        $database_pass=env('DB_PASSWORD', '');
+
+        try{
+            $pdo=new \PDO(
+                "mysql:dbname=$database;host=$host;charset=$charset",
+                $database_user,
+                $database_pass
+            );
+            $sql = 'select * from users where typeId=1';
+            foreach ($pdo->query($sql) as $row) {
+                $user_name=$row['name'];
+                $user_address=$row['address'];
+                print($user_name);
+                print("<br>");
+                print($user_address);
+                print("<br>");
+
+                // 候補者サーバのホスト名はenvファイルに記載前提
+                $candidate_wallet=env('CANDIDATE_SERVER');
+                print($candidate_wallet);
+                if($candidate_wallet==''){
+                    $candidate_wallet=$this->getOwnWalletHost($this->hosts, $user_address);
+                }
+
+                print($candidate_wallet);
+                print("<br>");
+
+                $candidate_asset=$this->getAssetValue($candidate_wallet, $user_address);
+                print($candidate_asset);
+                print("<br>");
+
+                
+            }
+        }catch (PDOException $e){
+            print('Error:'.$e->getMessage());
+            die();
+        }
+
+        // 立候補者の各アドレスの得票数（アセット数）を取得
+
+
+        // 各アセット数でソート
+
+        // ソート結果のグラフに描画
+
+        // ソートした配列をViewに渡す。
+
+        return view('/selection-result');
     }
 
     
@@ -118,6 +187,7 @@ class VoteController extends Controller
         return $secret;
     }
 
+    // 該当のホストが見つからない場合のエラー処理を入れる必要あり。
     public function getOwnWalletHost($hosts, $user_address){
         logger('in getOwnWalletHost func');
         $path=resource_path();
