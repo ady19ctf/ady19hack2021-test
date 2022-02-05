@@ -8,7 +8,7 @@
   </body>
   <form action="/vote-result" method="post">
         @csrf
-        <button class="btn btn-primary" type="submit">Yes</button>
+        <button class="btn btn-primary" name="candidate" value={{$candidate}} type="submit">Yes</button>
   </form>
   <form action="/vote" method="get">
         @csrf

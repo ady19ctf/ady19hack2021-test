@@ -30,6 +30,8 @@ Route::group(['middleware'=>'auth'], function() {
     });
     Route::group(['middleware'=>'role:user', 'prefix'=>'user', 'as'=>'user.'], function(){
         Route::resource('vote', User\VoteController::class);
+        // Route::post('vote', [User\VoteController::class, 'index'])->name('vote');
+        // Route::post('vote', [User\VoteController::class, 'check']);
     });
     // Route::post('vote-check', [User\VoteController::class, 'check']);
 
@@ -38,22 +40,20 @@ Route::group(['middleware'=>'auth'], function() {
     // });
 });
 
-// Route::get('/home', function () {
-//     return view('home');
-// });
+Route::get('/home', function () {
+    return view('home');
+});
 
-// Route::get('/view', 'VoteController@view');
+Route::get('/view', 'VoteController@view');
 
-// Route::get('/statement', function () {
-//     return view('statement');
-// });
+Route::get('/statement', function () {
+    return view('statement');
+});
 
-// Route::get('/vote', function () {
-//     return view('vote');
-// });
+Route::get('/vote', 'VoteController@createVote');
 
-// Route::post('/vote-check', 'VoteController@check');
+Route::post('/vote-check', 'VoteController@check');
 
-// Route::post('/vote-result','VoteController@vote');
+Route::post('/vote-result','VoteController@vote');
 
-// Route::get('/selection-result', 'VoteController@showresult');
+Route::get('/selection-result', 'VoteController@showresult');
