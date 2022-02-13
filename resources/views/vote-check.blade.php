@@ -4,11 +4,12 @@
   </head>
   <body>
     <h1>Vote Check</h1>
-    <div>{{$candidate}}に投票します。よろしいですか？</div>
+
+    <div>{{$user_name}}に投票します。よろしいですか？</div>
   </body>
   <form action="/vote-result" method="post">
         @csrf
-        <button class="btn btn-primary" name="candidate" value={{$candidate}} type="submit">Yes</button>
+        <button class="btn btn-primary" name="candidate" value={{$user_id}} type="submit">Yes</button>
   </form>
   <form action="/vote" method="get">
         @csrf

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Actions\Jetstream\DeleteUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Jetstream\Jetstream;
@@ -24,6 +25,7 @@ class JetstreamServiceProvider extends ServiceProvider
         if (App::environment('local')) {
           $this->app['request']->server->set('HTTPS', true);
         }
+
     }
 
     /**
