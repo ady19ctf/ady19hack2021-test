@@ -15,6 +15,25 @@
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
+
+                    @can('manage-users')
+                    <x-jet-nav-link href="{{ route('admin.PasswordResetRequests.index') }}" :active="request()->routeIs('admin.PasswordResetRequests.index')">
+                        {{ __('Password Reset Requests') }}
+                    </x-jet-nav-link>
+                    @endif
+                    
+                    @can('manage-votestatus')
+                    <x-jet-nav-link href="{{ route('admin.VoteStatus.index') }}" :active="request()->routeIs('admin.VoteStatus.index')">
+                        {{ __('Vote Status') }}
+                    </x-jet-nav-link>
+                    @endif
+
+                    @can('manage-vote')
+                    <x-jet-nav-link href="{{ route('user.vote') }}" :active="request()->routeIs('user.vote')">
+                        {{ __('Vote') }}
+                    </x-jet-nav-link>
+                    @endif
+
                 </div>
             </div>
 
